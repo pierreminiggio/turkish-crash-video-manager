@@ -1,0 +1,5 @@
+{
+    "require": {
+        "pierreminiggio/config-provider": "^1.0"
+    }
+}
