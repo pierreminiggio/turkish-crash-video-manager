@@ -76,6 +76,26 @@ if (! file_exists($monthYearCacheFolder)) {
 
 $framer = new VideoFramer();
 
+$isPixelDarkEnough = function (array $pixel): bool {          
+    if ($pixel['red'] > 2) {
+        return false;
+    }
+
+    if ($pixel['green'] > 2) {
+        return false;
+    }
+
+    if ($pixel['blue'] > 2) {
+        return false;
+    }
+
+    if ($pixel['alpha'] > 0) {
+        return false;
+    }
+
+    return true;
+};
+
 foreach ($crashLinks as $crashLink) {
     $videoName = base64_encode($crashLink);
 
@@ -120,8 +140,47 @@ foreach ($crashLinks as $crashLink) {
 
     $frameFolderContent = scandir($frameFolder, SCANDIR_SORT_DESCENDING);
     $frameFolderContent = array_filter($frameFolderContent, fn ($frameFileName) => $frameFileName !== '.' && $frameFileName !== '..');
+    
+    $lastNonOutroFrame = null;
 
-    var_dump($frameFolderContent);
+    foreach ($frameFolderContent as $frameName) {
+        $frameFileName = $frameFolder . DIRECTORY_SEPARATOR . $frameName;
+        $frameImage = imagecreatefrompng($frameFileName);
 
-    die;
+        $frameImageWidth = imagesx($frameImage);
+        $frameImageHeight = imagesy($frameImage);
+    
+        $thresholdToAvoidBlackBars = 100;
+        $frameLeft = 0;
+        $frameTop = 0 + $thresholdToAvoidBlackBars;
+        $frameRight = $frameImageWidth - 1;
+        $frameBottom = $frameImageHeight - (1 + $thresholdToAvoidBlackBars);
+        $topLeftPixel = imagecolorsforindex($frameImage, imagecolorat($frameImage, $frameLeft, $frameTop));
+        $topRightPixel = imagecolorsforindex($frameImage, imagecolorat($frameImage, $frameRight, $frameTop));
+        $bottomLeftPixel = imagecolorsforindex($frameImage, imagecolorat($frameImage, $frameLeft, $frameBottom));
+        $bottomRightPixel = imagecolorsforindex($frameImage, imagecolorat($frameImage, $frameRight, $frameBottom));
+
+        if (
+            $isPixelDarkEnough($topLeftPixel)
+            && $isPixelDarkEnough($topRightPixel)
+            && $isPixelDarkEnough($bottomLeftPixel)
+            && $isPixelDarkEnough($bottomRightPixel)
+        ) {
+            continue;
+        }
+
+        $lastNonOutroFrame = $frameName;
+        break;
+    }
+
+    if ($lastNonOutroFrame === null) {
+        echo 'No last non outro frame found for ' . $videoName;
+        die;
+    }
+
+    var_dump($frameFolder);
+
+    var_dump($lastNonOutroFrame);
+
+    //die;
 }
