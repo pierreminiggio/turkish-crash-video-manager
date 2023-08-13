@@ -111,9 +111,17 @@ foreach ($crashLinks as $crashLink) {
         mkdir($frameFolder);
     }
 
-    $framer->frame($videoFileName, $frameFolder . DIRECTORY_SEPARATOR . '%d.png', 30);
+    $frameFolderContent = scandir($frameFolder);
+    $frameFolderContent = array_filter($frameFolderContent, fn ($frameFileName) => $frameFileName !== '.' && $frameFileName !== '..');
 
-    var_dump($videoName);
-    var_dump($crashLink);
+    if (! $frameFolderContent) {
+        $framer->frame($videoFileName, $frameFolder . DIRECTORY_SEPARATOR . '%04d.png', 30);
+    }
+
+    $frameFolderContent = scandir($frameFolder, SCANDIR_SORT_DESCENDING);
+    $frameFolderContent = array_filter($frameFolderContent, fn ($frameFileName) => $frameFileName !== '.' && $frameFileName !== '..');
+
+    var_dump($frameFolderContent);
+
     die;
 }

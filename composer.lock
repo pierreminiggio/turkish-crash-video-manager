@@ -45,16 +45,16 @@
         },
         {
             "name": "pierreminiggio/video-to-frames",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pierreminiggio/php-video-to-frames.git",
-                "reference": "af97641b22823f401d45ced4395437b0006bb7a8"
+                "reference": "1821366d67b6fd29c802223b7fc00d68350dc71c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pierreminiggio/php-video-to-frames/zipball/af97641b22823f401d45ced4395437b0006bb7a8",
-                "reference": "af97641b22823f401d45ced4395437b0006bb7a8",
+                "url": "https://api.github.com/repos/pierreminiggio/php-video-to-frames/zipball/1821366d67b6fd29c802223b7fc00d68350dc71c",
+                "reference": "1821366d67b6fd29c802223b7fc00d68350dc71c",
                 "shasum": ""
             },
             "require": {
@@ -76,9 +76,9 @@
             "description": "Transform a video into frames",
             "support": {
                 "issues": "https://github.com/pierreminiggio/php-video-to-frames/issues",
-                "source": "https://github.com/pierreminiggio/php-video-to-frames/tree/1.0.2"
+                "source": "https://github.com/pierreminiggio/php-video-to-frames/tree/1.1.0"
             },
-            "time": "2021-04-29T09:34:57+00:00"
+            "time": "2023-08-13T16:47:46+00:00"
         }
     ],
     "packages-dev": [],
