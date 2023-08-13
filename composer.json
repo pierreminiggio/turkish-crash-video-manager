@@ -1,5 +1,6 @@
 {
     "require": {
-        "pierreminiggio/config-provider": "^1.0"
+        "pierreminiggio/config-provider": "^1.0",
+        "pierreminiggio/video-to-frames": "^1.0"
     }
 }

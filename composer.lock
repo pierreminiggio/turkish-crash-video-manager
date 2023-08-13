@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8e0d0ac0943669ac0bc2cfb7bc430a7",
+    "content-hash": "1dd7473fd3340783e236a1ed692aa56e",
     "packages": [
         {
             "name": "pierreminiggio/config-provider",
@@ -42,6 +42,43 @@
                 "source": "https://github.com/pierreminiggio/php-config-provider/tree/1.0.0"
             },
             "time": "2021-05-21T15:05:42+00:00"
+        },
+        {
+            "name": "pierreminiggio/video-to-frames",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pierreminiggio/php-video-to-frames.git",
+                "reference": "af97641b22823f401d45ced4395437b0006bb7a8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pierreminiggio/php-video-to-frames/zipball/af97641b22823f401d45ced4395437b0006bb7a8",
+                "reference": "af97641b22823f401d45ced4395437b0006bb7a8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PierreMiniggio\\VideoToFrames\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Pierre MINIGGIO",
+                    "email": "pierre@miniggiodev.fr"
+                }
+            ],
+            "description": "Transform a video into frames",
+            "support": {
+                "issues": "https://github.com/pierreminiggio/php-video-to-frames/issues",
+                "source": "https://github.com/pierreminiggio/php-video-to-frames/tree/1.0.2"
+            },
+            "time": "2021-04-29T09:34:57+00:00"
         }
     ],
     "packages-dev": [],

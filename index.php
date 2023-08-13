@@ -1,6 +1,7 @@
 <?php
 
 use PierreMiniggio\ConfigProvider\ConfigProvider;
+use PierreMiniggio\VideoToFrames\VideoFramer;
 
 $projectFolder = __DIR__ . DIRECTORY_SEPARATOR;
 
@@ -61,6 +62,58 @@ if (empty($periodJsonResponse['crashes'])) {
 
 $crashLinks = $periodJsonResponse['crashes'];
 
+$cacheFolder = $projectFolder . 'cache';
+
+if (! file_exists($cacheFolder)) {
+    mkdir($cacheFolder);
+}
+
+$monthYearCacheFolder = $cacheFolder . DIRECTORY_SEPARATOR . $monthYear;
+
+if (! file_exists($monthYearCacheFolder)) {
+    mkdir($monthYearCacheFolder);
+}
+
+$framer = new VideoFramer();
+
 foreach ($crashLinks as $crashLink) {
+    $videoName = base64_encode($crashLink);
+
+    $videoFolderName = $monthYearCacheFolder . DIRECTORY_SEPARATOR . $videoName;
+
+    if (! file_exists($videoFolderName)) {
+        mkdir($videoFolderName);
+    }
+
+    $videoFileName = $videoFolderName . DIRECTORY_SEPARATOR . 'original_video.mp4';
+
+    if (! file_exists($videoFileName)) {
+
+        if (! $openedVideoFile = fopen($videoFileName, 'wb+')) {
+            throw new RuntimeException('File opening error');
+        }
+
+        $videoCurl = curl_init($crashLink);
+        curl_setopt_array($videoCurl, [
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_FILE => $openedVideoFile
+        ]);
+
+        curl_exec($videoCurl);
+        curl_close($videoCurl);
+        fclose($openedVideoFile);
+    }
+
+    $frameFolder = $videoFolderName . DIRECTORY_SEPARATOR . 'frames';
+
+    if (! file_exists($frameFolder)) {
+        mkdir($frameFolder);
+    }
+
+    $framer->frame($videoFileName, $frameFolder . DIRECTORY_SEPARATOR . '%d.png', 30);
+
+    var_dump($videoName);
     var_dump($crashLink);
+    die;
 }
