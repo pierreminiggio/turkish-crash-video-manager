@@ -134,8 +134,10 @@ foreach ($crashLinks as $crashLink) {
     $frameFolderContent = scandir($frameFolder);
     $frameFolderContent = array_filter($frameFolderContent, fn ($frameFileName) => $frameFileName !== '.' && $frameFileName !== '..');
 
+    $fps = 30;
+
     if (! $frameFolderContent) {
-        $framer->frame($videoFileName, $frameFolder . DIRECTORY_SEPARATOR . '%04d.png', 30);
+        $framer->frame($videoFileName, $frameFolder . DIRECTORY_SEPARATOR . '%04d.png', $fps);
     }
 
     $frameFolderContent = scandir($frameFolder, SCANDIR_SORT_DESCENDING);
@@ -180,7 +182,30 @@ foreach ($crashLinks as $crashLink) {
 
     var_dump($frameFolder);
 
-    var_dump($lastNonOutroFrame);
+    $explodedLastNonOutroFrame = explode('.', $lastNonOutroFrame, 2);
+    $lastNonOutroFrameNumber = (int) $explodedLastNonOutroFrame[0];
+
+    $truncatedOutroFileName = $videoFolderName . DIRECTORY_SEPARATOR . 'truncated_outro.mp4';
+
+    if (! file_exists($truncatedOutroFileName)) {
+        shell_exec(
+            'ffmpeg -r '
+            . $fps
+            . ' -f image2 -s 1920x1080 -start_number 1 -i '
+            . $frameFolder
+            . DIRECTORY_SEPARATOR
+            . '%04d.png'
+            . ' -vframes '
+            . $lastNonOutroFrameNumber
+            . ' -vcodec libx264 -crf 25 -pix_fmt yuv420p '
+            . $truncatedOutroFileName
+        );
+    }
+    
+    if (! file_exists($truncatedOutroFileName)) {
+        echo 'Error while creating truncated outro file name for ' . $videoFolderName;
+        die;
+    }
 
     //die;
 }
