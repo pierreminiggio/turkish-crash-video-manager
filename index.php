@@ -180,18 +180,36 @@ foreach ($crashLinks as $crashLink) {
         die;
     }
 
-    var_dump($frameFolder);
-
     $explodedLastNonOutroFrame = explode('.', $lastNonOutroFrame, 2);
     $lastNonOutroFrameNumber = (int) $explodedLastNonOutroFrame[0];
 
     $truncatedOutroFileName = $videoFolderName . DIRECTORY_SEPARATOR . 'truncated_outro.mp4';
 
     if (! file_exists($truncatedOutroFileName)) {
+
+        // ffmpeg returns an error with original resolution,
+        // and upscaled and resized resolution works great enough
+         
+        /*$originalVideoResolution = shell_exec(
+            'ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 '
+            . $videoFileName
+        );
+
+        if (! $originalVideoResolution) {
+            echo 'No original video resolution found';
+            die;
+        }
+
+        $truncatedVideoResolution = $originalVideoResolution;*/
+
+        $truncatedVideoResolution = '1920x1080';
+
         shell_exec(
             'ffmpeg -r '
             . $fps
-            . ' -f image2 -s 1920x1080 -start_number 1 -i '
+            . ' -f image2 -s '
+            . $truncatedVideoResolution
+            . ' -start_number 1 -i '
             . $frameFolder
             . DIRECTORY_SEPARATOR
             . '%04d.png'
@@ -207,5 +225,5 @@ foreach ($crashLinks as $crashLink) {
         die;
     }
 
-    //die;
+    var_dump($truncatedOutroFileName);
 }
